@@ -1,0 +1,351 @@
+[agent]
+industry = "Phần mềm quản trị doanh nghiệp, ERP và CRM tại Việt Nam"
+language = "vi"
+timezone = "Asia/Ho_Chi_Minh"
+report_frequency = "weekly"
+lookback_hours = 720
+minimum_relevance = 1
+max_items_per_source = 25
+request_timeout_seconds = 18
+workers = 8
+source_type_priority = { facebook = 1, tiktok = 1, youtube = 1, website = 3, google_news = 4 }
+keywords = ["ERP", "CRM", "quản trị doanh nghiệp", "quản lý công việc", "tự động hóa", "AI", "nhân sự", "kế toán", "bán hàng", "chuyển đổi số"]
+
+[discovery]
+provider = "auto"
+brave_api_key_env = "BRAVE_SEARCH_API_KEY"
+google_api_key_env = "GOOGLE_SEARCH_API_KEY"
+google_cx_env = "GOOGLE_SEARCH_CX"
+
+[schedule]
+enabled = true
+frequency = "daily"
+time = "07:30"
+weekday = "MON"
+
+[[competitors]]
+name = "Base.vn"
+aliases = ["Base.vn", "Base Vietnam", "Base Work"]
+urls = ["https://base.vn/"]
+
+[[competitors]]
+name = "MISA AMIS"
+aliases = ["MISA AMIS", "AMIS MISA", "AMIS360"]
+urls = ["https://amis.misa.vn/"]
+
+[[competitors]]
+name = "1Office"
+aliases = ["1Office", "1Office Next", "1AI"]
+urls = ["https://1office.vn/"]
+
+[[competitors]]
+name = "ECOUNT"
+aliases = ["ECOUNT ERP", "ECOUNT"]
+urls = ["https://www.ecount.com/vn/"]
+
+[[competitors]]
+name = "FastWork"
+aliases = ["FastWork.vn", "FastWork WORK+", "FastWork"]
+urls = ["https://fastwork.vn/"]
+
+[[competitors]]
+name = "CloudGO"
+aliases = ["CloudGO CRM", "CloudGO"]
+urls = ["https://cloudgo.vn/"]
+
+[[competitors]]
+name = "Odoo"
+aliases = ["Odoo ERP", "Odoo"]
+urls = ["https://www.odoo.com/"]
+
+[[topics]]
+name = "AI và tự động hóa"
+keywords = ["AI", "agent", "tự động hóa", "automation", "no-code", "low-code"]
+
+[[topics]]
+name = "CRM và bán hàng"
+keywords = ["CRM", "lead", "bán hàng", "sales", "khách hàng", "omnichannel"]
+
+[[topics]]
+name = "ERP và vận hành"
+keywords = ["ERP", "quản trị", "quy trình", "workflow", "dự án", "công việc", "sản xuất", "tồn kho"]
+
+[[topics]]
+name = "Nhân sự và tài chính"
+keywords = ["nhân sự", "HRM", "tuyển dụng", "chấm công", "tiền lương", "kế toán", "thuế", "hóa đơn"]
+
+[[topics]]
+name = "Triển khai và hiệu quả"
+keywords = ["triển khai", "chi phí", "ROI", "case study", "khách hàng", "bảo mật", "tích hợp"]
+
+[[sources]]
+id = "site-base"
+name = "Base Blog"
+type = "website"
+url = "https://base.vn/blog/"
+max_crawl_pages = 12
+priority = 1
+
+[[sources]]
+id = "site-misa"
+name = "MISA AMIS"
+type = "website"
+url = "https://amis.misa.vn/"
+max_crawl_pages = 12
+priority = 1
+
+[[sources]]
+id = "site-1office"
+name = "1Office Blog"
+type = "website"
+url = "https://1office.vn/blog"
+max_crawl_pages = 12
+priority = 1
+
+[[sources]]
+id = "site-ecount"
+name = "ECOUNT Việt Nam"
+type = "website"
+url = "https://www.ecount.com/vn/"
+max_crawl_pages = 10
+priority = 1
+
+[[sources]]
+id = "site-fastwork"
+name = "FastWork"
+type = "website"
+url = "https://fastwork.vn/"
+max_crawl_pages = 10
+priority = 1
+
+[[sources]]
+id = "site-cloudgo"
+name = "CloudGO Blog"
+type = "website"
+url = "https://cloudgo.vn/"
+max_crawl_pages = 12
+priority = 1
+
+[[sources]]
+id = "site-odoo"
+name = "Odoo Blog"
+type = "website"
+url = "https://www.odoo.com/blog"
+max_crawl_pages = 12
+priority = 1
+
+[[sources]]
+id = "news-base"
+name = "Tin về Base.vn"
+type = "google_news"
+query = "\"Base.vn\""
+
+[[sources]]
+id = "news-misa"
+name = "Tin về MISA AMIS"
+type = "google_news"
+query = "\"MISA AMIS\""
+
+[[sources]]
+id = "news-1office"
+name = "Tin về 1Office"
+type = "google_news"
+query = "\"1Office\""
+
+[[sources]]
+id = "news-ecount"
+name = "Tin về ECOUNT ERP"
+type = "google_news"
+query = "\"ECOUNT ERP\""
+
+[[sources]]
+id = "news-fastwork"
+name = "Tin về FastWork.vn"
+type = "google_news"
+query = "\"FastWork.vn\""
+
+[[sources]]
+id = "news-cloudgo"
+name = "Tin về CloudGO CRM"
+type = "google_news"
+query = "\"CloudGO\" CRM"
+
+[[sources]]
+id = "news-odoo"
+name = "Tin về Odoo Việt Nam"
+type = "google_news"
+query = "\"Odoo\" ERP Việt Nam"
+
+[[sources]]
+id = "news-industry"
+name = "Tin ngành ERP CRM Việt Nam"
+type = "google_news"
+query = "(ERP OR CRM) doanh nghiệp Việt Nam AI"
+
+[[sources]]
+id = "yt-base"
+name = "YouTube Base.vn - chưa xác nhận ID kênh"
+type = "youtube"
+channel_id = ""
+search_query = "site:youtube.com \"Base.vn\""
+fallback_search = true
+
+[[sources]]
+id = "yt-misa"
+name = "YouTube Học MISA Online"
+type = "youtube"
+channel_id = "UCowzbaXcps3pA-aF-i_Xf8g"
+search_query = "site:youtube.com \"MISA AMIS\""
+fallback_search = true
+
+[[sources]]
+id = "yt-1office"
+name = "YouTube 1Office"
+type = "youtube"
+channel_id = "UCeTIRNqxaTwk0_kcTw6SxmA"
+search_query = "site:youtube.com \"1Office\""
+fallback_search = true
+
+[[sources]]
+id = "yt-ecount"
+name = "YouTube ECOUNT - chưa xác nhận ID kênh"
+type = "youtube"
+channel_id = ""
+search_query = "site:youtube.com \"ECOUNT ERP\" Vietnam"
+fallback_search = true
+
+[[sources]]
+id = "yt-fastwork"
+name = "YouTube FastWork - chưa xác nhận ID kênh"
+type = "youtube"
+channel_id = ""
+search_query = "site:youtube.com \"FastWork.vn\""
+fallback_search = true
+
+[[sources]]
+id = "yt-cloudgo"
+name = "YouTube CloudGO - chưa xác nhận ID kênh"
+type = "youtube"
+channel_id = ""
+search_query = "site:youtube.com \"CloudGO CRM\""
+fallback_search = true
+
+[[sources]]
+id = "yt-odoo"
+name = "YouTube Odoo - chưa xác nhận ID kênh"
+type = "youtube"
+channel_id = ""
+search_query = "site:youtube.com/@Odoo Odoo ERP"
+fallback_search = true
+
+[[sources]]
+id = "fb-base"
+name = "Facebook Base.vn"
+type = "facebook"
+page_id = "base.vietnam"
+search_query = "site:facebook.com/base.vietnam \"Base.vn\""
+fallback_search = true
+
+[[sources]]
+id = "fb-misa"
+name = "Facebook MISA AMIS"
+type = "facebook"
+page_id = "AMIS360"
+search_query = "site:facebook.com/AMIS360 \"MISA AMIS\""
+fallback_search = true
+
+[[sources]]
+id = "fb-1office"
+name = "Facebook 1Office"
+type = "facebook"
+page_id = "1officevn"
+search_query = "site:facebook.com/1officevn \"1Office\""
+fallback_search = true
+
+[[sources]]
+id = "fb-ecount"
+name = "Facebook ECOUNT - chưa xác nhận Page ID"
+type = "facebook"
+page_id = ""
+search_query = "site:facebook.com \"ECOUNT ERP\" Vietnam"
+fallback_search = true
+
+[[sources]]
+id = "fb-fastwork"
+name = "Facebook FastWork - chưa xác nhận Page ID"
+type = "facebook"
+page_id = ""
+search_query = "site:facebook.com \"FastWork.vn\""
+fallback_search = true
+
+[[sources]]
+id = "fb-cloudgo"
+name = "Facebook CloudGO - chưa xác nhận Page ID"
+type = "facebook"
+page_id = ""
+search_query = "site:facebook.com \"CloudGO CRM\""
+fallback_search = true
+
+[[sources]]
+id = "fb-odoo"
+name = "Facebook Odoo"
+type = "facebook"
+page_id = "odoo"
+search_query = "site:facebook.com/odoo Odoo"
+fallback_search = true
+
+[[sources]]
+id = "tt-base"
+name = "TikTok Base.vn - chưa xác nhận tài khoản"
+type = "tiktok"
+username = ""
+search_query = "site:tiktok.com \"Base.vn\""
+fallback_search = true
+
+[[sources]]
+id = "tt-misa"
+name = "TikTok MISA AMIS - chưa xác nhận tài khoản"
+type = "tiktok"
+username = ""
+search_query = "site:tiktok.com \"MISA AMIS\""
+fallback_search = true
+
+[[sources]]
+id = "tt-1office"
+name = "TikTok 1Office - chưa xác nhận tài khoản"
+type = "tiktok"
+username = ""
+search_query = "site:tiktok.com \"1Office\""
+fallback_search = true
+
+[[sources]]
+id = "tt-ecount"
+name = "TikTok ECOUNT - chưa xác nhận tài khoản"
+type = "tiktok"
+username = ""
+search_query = "site:tiktok.com \"ECOUNT ERP\""
+fallback_search = true
+
+[[sources]]
+id = "tt-fastwork"
+name = "TikTok FastWork - chưa xác nhận tài khoản"
+type = "tiktok"
+username = ""
+search_query = "site:tiktok.com \"FastWork.vn\""
+fallback_search = true
+
+[[sources]]
+id = "tt-cloudgo"
+name = "TikTok CloudGO - chưa xác nhận tài khoản"
+type = "tiktok"
+username = ""
+search_query = "site:tiktok.com \"CloudGO CRM\""
+fallback_search = true
+
+[[sources]]
+id = "tt-odoo"
+name = "TikTok Odoo - chưa xác nhận tài khoản"
+type = "tiktok"
+username = ""
+search_query = "site:tiktok.com \"Odoo ERP\""
+fallback_search = true

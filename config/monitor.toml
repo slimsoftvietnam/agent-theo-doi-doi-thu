@@ -1,0 +1,269 @@
+[agent]
+industry = "AI cho doanh nghiệp tại Việt Nam"
+language = "vi"
+timezone = "Asia/Ho_Chi_Minh"
+report_frequency = "daily"
+lookback_hours = 72
+minimum_relevance = 1
+max_items_per_source = 30
+request_timeout_seconds = 20
+workers = 6
+keywords = [
+  "AI agent",
+  "trí tuệ nhân tạo",
+  "tự động hóa",
+  "AI doanh nghiệp",
+  "generative AI"
+]
+
+[discovery]
+# "auto" thử Brave/Google CSE khi có khóa, sau đó dùng Google News RSS miễn phí.
+provider = "auto"
+brave_api_key_env = "BRAVE_SEARCH_API_KEY"
+google_api_key_env = "GOOGLE_SEARCH_API_KEY"
+google_cx_env = "GOOGLE_SEARCH_CX"
+
+[schedule]
+enabled = false
+frequency = "daily"
+time = "07:30"
+weekday = "MON"
+
+[[competitors]]
+name = "FPT AI"
+aliases = ["FPT.AI", "FPT Smart Cloud", "FPT AI"]
+urls = ["https://fpt.ai/"]
+
+[[competitors]]
+name = "Viettel AI"
+aliases = ["Viettel AI", "Viettel Cyberspace Center"]
+urls = ["https://viettelai.vn/"]
+
+[[competitors]]
+name = "VNPT AI"
+aliases = ["VNPT AI", "VNPT-IT"]
+urls = ["https://vnptai.io/"]
+
+[[topics]]
+name = "AI Agent"
+keywords = ["AI agent", "tác nhân AI", "agentic AI", "multi-agent"]
+
+[[topics]]
+name = "Tự động hóa doanh nghiệp"
+keywords = ["tự động hóa", "automation", "quy trình", "workflow"]
+
+[[topics]]
+name = "Mô hình và nền tảng AI"
+keywords = ["mô hình AI", "LLM", "generative AI", "nền tảng AI"]
+
+[[sources]]
+id = "google-news-ai-vn"
+name = "Google News - AI doanh nghiệp Việt Nam"
+type = "google_news"
+query = "AI doanh nghiệp Việt Nam"
+priority = 1
+enabled = true
+
+[[sources]]
+id = "vnexpress-sohoa"
+name = "VnExpress Số Hóa"
+type = "rss"
+url = "https://vnexpress.net/rss/so-hoa.rss"
+priority = 2
+enabled = true
+
+[[sources]]
+id = "google-gemini-blog"
+name = "Google Gemini Blog"
+type = "rss"
+url = "https://blog.google/products/gemini/rss/"
+priority = 2
+enabled = true
+
+[[sources]]
+id = "website-fpt-ai"
+name = "Website FPT.AI"
+type = "website"
+url = "https://fpt.ai/news/"
+max_crawl_pages = 10
+request_delay_seconds = 0.3
+priority = 1
+enabled = true
+
+[[sources]]
+id = "website-viettel-ai"
+name = "Website Viettel AI"
+type = "website"
+url = "https://viettelai.vn/tin-tuc"
+max_crawl_pages = 10
+request_delay_seconds = 0.3
+priority = 1
+enabled = true
+
+[[sources]]
+id = "website-vnpt-ai"
+name = "Website VNPT AI"
+type = "website"
+url = "https://vnptai.io/vi/news"
+max_crawl_pages = 10
+request_delay_seconds = 0.3
+priority = 1
+enabled = true
+
+[[sources]]
+id = "youtube-fpt-ai"
+name = "YouTube FPT.AI"
+type = "youtube"
+channel_id = "UC64g9GmKyG_N-xZHGFRITyQ"
+api_key_env = "YOUTUBE_API_KEY"
+fallback_search = true
+search_query = "site:youtube.com FPT.AI"
+priority = 1
+enabled = true
+
+[[sources]]
+id = "youtube-viettel-ai"
+name = "YouTube Viettel AI"
+type = "youtube"
+channel_id = "UCEBCsy_47ZJ3z3kSH6AnO1w"
+api_key_env = "YOUTUBE_API_KEY"
+fallback_search = true
+search_query = "site:youtube.com \"Viettel AI\""
+priority = 1
+enabled = true
+
+[[sources]]
+id = "youtube-vnpt-ai"
+name = "YouTube VNPT AI - chưa xác nhận channel ID"
+type = "youtube"
+channel_id = ""
+api_key_env = "YOUTUBE_API_KEY"
+fallback_search = true
+search_query = "site:youtube.com \"VNPT AI\""
+priority = 1
+enabled = true
+
+[[sources]]
+id = "facebook-fpt-ai"
+name = "Facebook FPT.AI"
+type = "facebook"
+page_id = "fptai.platform"
+token_env = "FACEBOOK_PAGE_ACCESS_TOKEN"
+fallback_search = true
+search_query = "site:facebook.com/fptai.platform FPT AI"
+priority = 1
+enabled = true
+
+[[sources]]
+id = "facebook-viettel-ai"
+name = "Facebook Viettel AI"
+type = "facebook"
+page_id = "viettelai"
+token_env = "FACEBOOK_PAGE_ACCESS_TOKEN"
+fallback_search = true
+search_query = "site:facebook.com/viettelai \"Viettel AI\""
+priority = 1
+enabled = true
+
+[[sources]]
+id = "facebook-vnpt-ai"
+name = "Facebook VNPT AI - chưa xác nhận Page ID"
+type = "facebook"
+page_id = ""
+token_env = "FACEBOOK_PAGE_ACCESS_TOKEN"
+fallback_search = true
+search_query = "site:facebook.com \"VNPT AI\""
+priority = 1
+enabled = true
+
+[[sources]]
+id = "tiktok-fpt-ai"
+name = "TikTok FPT.AI - chưa xác nhận username"
+type = "tiktok"
+api_mode = "auto"
+username = ""
+display_token_env = "TIKTOK_ACCESS_TOKEN"
+research_token_env = "TIKTOK_RESEARCH_ACCESS_TOKEN"
+feed_url = ""
+fallback_search = true
+search_query = "site:tiktok.com \"FPT AI\""
+priority = 1
+enabled = true
+
+[[sources]]
+id = "tiktok-viettel-ai"
+name = "TikTok Viettel AI"
+type = "tiktok"
+api_mode = "auto"
+username = "viettelai"
+display_token_env = "TIKTOK_ACCESS_TOKEN"
+research_token_env = "TIKTOK_RESEARCH_ACCESS_TOKEN"
+feed_url = ""
+fallback_search = true
+search_query = "site:tiktok.com/@viettelai \"Viettel AI\""
+priority = 1
+enabled = true
+
+[[sources]]
+id = "tiktok-vnpt-ai"
+name = "TikTok VNPT AI - chưa xác nhận username"
+type = "tiktok"
+api_mode = "auto"
+username = ""
+display_token_env = "TIKTOK_ACCESS_TOKEN"
+research_token_env = "TIKTOK_RESEARCH_ACCESS_TOKEN"
+feed_url = ""
+fallback_search = true
+search_query = "site:tiktok.com \"VNPT AI\""
+priority = 1
+enabled = true
+
+# Các nguồn dưới đây luôn chạy tầng phát hiện qua chỉ mục web độc lập. Kết quả
+# được gắn SEARCH_INDEX_ONLY và không được coi là quét trực tiếp nền tảng.
+[[sources]]
+id = "web-index-facebook-fpt-ai"
+name = "Chỉ mục web - Facebook FPT.AI"
+type = "web_search"
+search_query = "site:facebook.com/fptai.platform FPT AI"
+priority = 2
+enabled = true
+
+[[sources]]
+id = "web-index-tiktok-fpt-ai"
+name = "Chỉ mục web - TikTok FPT.AI"
+type = "web_search"
+search_query = "site:tiktok.com \"FPT AI\""
+priority = 2
+enabled = true
+
+[[sources]]
+id = "web-index-youtube-competitors"
+name = "Chỉ mục web - YouTube đối thủ"
+type = "web_search"
+search_query = "site:youtube.com (FPT.AI OR Viettel AI OR VNPT AI)"
+priority = 2
+enabled = true
+
+[[sources]]
+id = "google-news-fpt-ai"
+name = "Tin ngành và đối thủ - FPT AI"
+type = "google_news"
+query = "\"FPT.AI\" OR \"FPT Smart Cloud\""
+priority = 1
+enabled = true
+
+[[sources]]
+id = "google-news-viettel-ai"
+name = "Tin ngành và đối thủ - Viettel AI"
+type = "google_news"
+query = "\"Viettel AI\""
+priority = 1
+enabled = true
+
+[[sources]]
+id = "google-news-vnpt-ai"
+name = "Tin ngành và đối thủ - VNPT AI"
+type = "google_news"
+query = "\"VNPT AI\""
+priority = 1
+enabled = true

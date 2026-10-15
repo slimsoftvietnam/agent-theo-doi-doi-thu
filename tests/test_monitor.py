@@ -1,0 +1,97 @@
+from __future__ import annotations
+
+import tempfile
+import unittest
+import zipfile
+from datetime import datetime, timezone
+from pathlib import Path
+
+from competitor_monitor.analysis import enrich_item
+from competitor_monitor.collectors import ArticleHTMLParser, SourceResult, _evidence_tier, _tiktok_item, parse_article_html, parse_feed, parse_sitemap
+from competitor_monitor.db import Store
+from competitor_monitor.util import canonical_url, title_dedupe_key
+from competitor_monitor.xlsx_writer import write_xlsx
+
+ROOT = Path(__file__).resolve().parent.parent
+TEST_TMP = ROOT / "work" / "test-tmp"
+TEST_TMP.mkdir(parents=True, exist_ok=True)
+
+
+class MonitorTests(unittest.TestCase):
+    def test_canonical_url_removes_tracking(self):
+        self.assertEqual(canonical_url("HTTPS://Example.com/a/?utm_source=x&b=2#top"), "https://example.com/a?b=2")
+
+    def test_feed_parses_current_item(self):
+        payload = b'''<?xml version="1.0"?><rss><channel><item><title>AI Agent launch</title><link>https://example.com/a?utm_source=x</link><pubDate>Mon, 12 Oct 2026 02:00:00 GMT</pubDate><description>New enterprise AI agent</description></item></channel></rss>'''
+        source = {"id": "rss", "name": "RSS", "type": "rss"}
+        items = parse_feed(payload, source, datetime(2026, 10, 11, tzinfo=timezone.utc), 10)
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0]["canonical_url"], "https://example.com/a")
+
+    def test_sitemap_and_jsonld_article_are_parsed(self):
+        sitemap = b'''<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.com/news/ai</loc><lastmod>2026-10-15T01:00:00Z</lastmod></url></urlset>'''
+        urls, indexes = parse_sitemap(sitemap)
+        self.assertEqual(indexes, [])
+        self.assertEqual(urls[0][0], "https://example.com/news/ai")
+        page = b'''<html><head><script type="application/ld+json">{"@type":"NewsArticle","headline":"AI Agent launch","datePublished":"2026-10-15T01:00:00Z","description":"Enterprise automation","author":{"name":"Example"}}</script></head></html>'''
+        item = parse_article_html(page, urls[0][0], {"id": "web", "name": "Web", "type": "website"}, datetime(2026, 10, 14, tzinfo=timezone.utc))
+        self.assertIsNotNone(item)
+        self.assertEqual(item["author"], "Example")
+
+    def test_listing_cards_find_flat_article_slugs(self):
+        parser = ArticleHTMLParser()
+        parser.feed('<nav><a href="/pricing">Pricing</a></nav><article><a href="/he-thong-quan-ly-nhan-su">HRMS</a></article>')
+        self.assertEqual(parser.article_links, ["/he-thong-quan-ly-nhan-su"])
+
+    def test_search_index_evidence_is_explicit(self):
+        self.assertEqual(_evidence_tier("search_index_google_news_rss", "SEARCH_INDEX_ONLY"), "SEARCH_INDEX_ONLY")
+
+    def test_tiktok_api_row_keeps_real_metrics(self):
+        source = {"id": "tt", "name": "TikTok", "type": "tiktok", "username": "example"}
+        result = SourceResult("tt", "TikTok", "tiktok", method="tiktok_research_api")
+        row = {"id": "123", "create_time": 1792036800, "video_description": "AI agent demo", "username": "example", "view_count": 50, "like_count": 7}
+        item = _tiktok_item(source, result, row, datetime(2026, 10, 14, tzinfo=timezone.utc))
+        self.assertIsNotNone(item)
+        self.assertEqual(item["engagement"]["view_count"], 50)
+
+    def test_classification_separates_fact_and_tags(self):
+        config = {"keywords": ["AI agent"], "competitors": [{"name": "FPT AI", "aliases": ["FPT.AI"]}], "topics": [{"name": "AI Agent", "keywords": ["AI agent"]}]}
+        item = {"title": "FPT.AI ra mắt AI Agent", "summary": "Công bố nền tảng mới", "published_at": "2026-10-12T00:00:00Z", "source_priority": 1}
+        enrich_item(item, config)
+        self.assertEqual(item["kind"], "SỰ KIỆN")
+        self.assertEqual(item["competitors"], ["FPT AI"])
+        self.assertIn("AI Agent", item["topics"])
+
+    def test_source_priority_does_not_make_unrelated_item_relevant(self):
+        config = {"keywords": ["AI agent"], "competitors": [], "topics": []}
+        item = {"title": "Máy ảnh du lịch mới", "summary": "Ống kính nhỏ gọn", "published_at": "2026-10-12T00:00:00Z", "source_priority": 1}
+        enrich_item(item, config)
+        self.assertEqual(item["relevance_score"], 0)
+
+    def test_keywords_can_live_under_agent_table(self):
+        config = {"agent": {"keywords": ["generative AI"]}, "competitors": [], "topics": []}
+        item = {"title": "Generative AI for business", "summary": "", "published_at": "2026-10-15T00:00:00Z", "source_priority": 1}
+        enrich_item(item, config)
+        self.assertGreater(item["relevance_score"], 0)
+
+    def test_sqlite_deduplicates_title_across_urls(self):
+        with tempfile.TemporaryDirectory(dir=TEST_TMP) as folder:
+            store = Store(Path(folder) / "state.db")
+            store.begin_run("r1", "daily", 24)
+            base = {"item_id": "a", "dedupe_key": title_dedupe_key("Same title", "2026-10-12T00:00:00Z"), "canonical_url": "https://a.example/1", "source_id": "s", "source_name": "S", "source_type": "rss", "title": "Same title", "summary": "", "published_at": "2026-10-12T00:00:00Z", "author": "", "kind": "SỰ KIỆN", "competitors": [], "topics": [], "relevance_score": 1, "engagement": {}, "evidence": {"url": "https://a.example/1"}}
+            self.assertTrue(store.save_item("r1", base))
+            store.begin_run("r2", "daily", 24)
+            duplicate = {**base, "item_id": "b", "canonical_url": "https://b.example/2"}
+            self.assertFalse(store.save_item("r2", duplicate))
+            store.close()
+
+    def test_xlsx_is_valid_zip_with_hyperlink(self):
+        with tempfile.TemporaryDirectory(dir=TEST_TMP) as folder:
+            target = write_xlsx(Path(folder) / "report.xlsx", [{"name": "Data", "rows": [["Title", "URL"], ["A", "https://example.com"]], "widths": [20, 40], "hyperlink_columns": [2]}])
+            with zipfile.ZipFile(target) as archive:
+                self.assertIn("xl/workbook.xml", archive.namelist())
+                self.assertIn("xl/worksheets/_rels/sheet1.xml.rels", archive.namelist())
+
+
+if __name__ == "__main__":
+    unittest.main()
