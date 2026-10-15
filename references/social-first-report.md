@@ -31,6 +31,8 @@ Tách **sự kiện** (“kênh đăng video X ngày Y”) khỏi **nhận đị
 
 ## HTML điều hành
 
+Dùng [mẫu landing page tuần 05–11/10/2026](../assets/example-report-2026-10-05_11.html) làm chuẩn hình thức (font, khoảng trắng, thứ bậc nội dung, màu, một cột). Bộ dựng tự động đã dùng [CSS mẫu](../assets/report-style.css), nhưng **không** coi nội dung lịch sử của mẫu là dữ liệu cho kỳ mới. Sau khi kiểm chứng mạng xã hội, thay tóm tắt, 5 chủ đề, hoạt động, góc bỏ trống, ý tưởng và nguồn bằng bằng chứng kỳ hiện tại. Nếu dưới 5 chủ đề đủ nguồn, hiển thị số thực tế, không bịa cho đủ mẫu.
+
 - Mặc định đọc khoảng 3 phút, đáp ứng người đi làm không biết lập trình. Một cột dọc; mỗi heading là một section riêng. Không đặt phần “Đối thủ đang làm gì?” bên cạnh “Chủ đề nổi bật”.
 - Tiêu đề chính: **Báo cáo phân tích đối thủ**. Dùng font **K2D** (Google Fonts và font dự phòng nếu offline). Thiết kế như landing page chuyên nghiệp, tương phản tốt, responsive và in được.
 - Sau hero có khối **tóm tắt ngắn** trước nội dung chi tiết. Bốn phần chính: **5 chủ đề nổi bật**, **Đối thủ đang làm gì?**, **3 góc nội dung còn bỏ trống**, **5 ý tưởng cho tuần tới**. Nguồn thu thập ở cuối trang.

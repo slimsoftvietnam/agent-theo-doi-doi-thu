@@ -7,6 +7,15 @@ description: Theo dõi fanpage Facebook, kênh YouTube/TikTok và tin ngành c�
 
 Agent chạy cục bộ bằng Python 3.11+ và SQLite, không cần dịch vụ trả phí. Cấu hình mặc định ở `config/monitor.toml`; dữ liệu và lịch sử nằm trong `work/`. Skill bao gồm collector tự động **và** bước kiểm chứng xã hội thủ công: báo cáo cuối không được nâng tín hiệu tìm kiếm thành bài đã đọc trực tiếp.
 
+## Lần đầu sau khi cài skill
+
+Ở **lần gọi skill đầu tiên**, chạy `python monitor.py preview` để lấy đường dẫn, mở và đưa người dùng xem [báo cáo mẫu 05–11/10/2026](assets/example-report-2026-10-05_11.html). Đây là ví dụ lịch sử về hình thức, không phải báo cáo cập nhật hay dữ liệu mặc định của người cài. Sau đó hỏi trong một lượt:
+
+1. Tên các đối thủ muốn theo dõi; URL fanpage Facebook, kênh TikTok, YouTube của **từng** đối thủ (có thể ghi “chưa biết” để agent hỗ trợ xác minh); URL website/blog là **tùy chọn**.
+2. Thông tin doanh nghiệp người dùng: tên công ty, sản phẩm/dịch vụ chính, khách hàng mục tiêu và thị trường/ngành; website công ty nếu có. Dùng bối cảnh này để chọn chủ đề, góc nội dung và ý tưởng phù hợp, không công bố thông tin nhạy cảm nếu chưa được phép.
+
+Chỉ sau khi có câu trả lời mới lập cấu hình riêng cho người dùng trong `work/` theo [hướng dẫn cấu hình](references/configuration.md); không mặc định dùng hồ sơ ERP/CRM mẫu như dữ liệu của họ. Nếu thiếu URL xã hội, đánh dấu chưa xác minh, tìm kênh chính thức công khai và xin người dùng xác nhận nếu còn mơ hồ. Không tự ý tạo lịch hay bắt đầu thu thập trước khi phạm vi được chốt. Skill cài đặt không tự chạy/có sự kiện hậu cài đặt: bước xem mẫu và hỏi thông tin diễn ra khi người dùng gọi skill lần đầu.
+
 ## Hồ sơ ERP/CRM Việt Nam
 
 `config/erp-crm-vn.toml` theo dõi riêng Base.vn, MISA AMIS, 1Office, ECOUNT, FastWork, CloudGO và Odoo. Không dùng chung SQLite với hồ sơ AI mặc định. Chạy trong thư mục skill:
@@ -28,7 +37,7 @@ Hồ sơ này ưu tiên Facebook, TikTok và YouTube trong thứ tự xem xét v
 1. Nếu chưa khởi tạo, chạy `setup.cmd` hoặc `python monitor.py setup`.
 2. Kiểm tra cấu hình bằng `python monitor.py validate-config` và xem các quyền API đang có bằng `python monitor.py doctor`. Lệnh doctor chỉ báo có/không, không in secret. Khi đổi ngành, đối thủ hoặc nguồn, đọc [hướng dẫn cấu hình](references/configuration.md).
 3. Chạy thủ công bằng `run.cmd` hoặc `python monitor.py run`.
-4. Đọc đường dẫn kết quả từ JSON in ra cuối lệnh. Báo cáo mỗi lượt gồm Markdown, HTML và Excel; bảng trạng thái nguồn có lý do và cách khắc phục khi chưa lấy trực tiếp. Không sửa lịch sử của lượt cũ. Nếu cần báo cáo quyết định cho lãnh đạo, kiểm chứng bài gốc và biên tập riêng theo mẫu trong [chuẩn báo cáo](references/social-first-report.md).
+4. Đọc đường dẫn kết quả từ JSON in ra cuối lệnh. Báo cáo mỗi lượt gồm Markdown, HTML landing page theo hệ thiết kế của mẫu và Excel; bảng trạng thái nguồn có lý do và cách khắc phục khi chưa lấy trực tiếp. Mở file HTML để người dùng xem. Không sửa lịch sử của lượt cũ. Báo cáo tự động chỉ trình bày bằng chứng và gợi ý sơ bộ; nếu cần bản tin điều hành như **nội dung** của mẫu, kiểm chứng bài gốc và biên tập riêng theo [chuẩn báo cáo](references/social-first-report.md), giữ cùng hệ thiết kế.
 5. Nếu người dùng muốn tự động hóa Windows, dùng `scripts/install-schedule.ps1 -Install` sau khi họ xác nhận lịch. Không tự ý tạo lịch hệ thống.
 
 ## Nguyên tắc bắt buộc

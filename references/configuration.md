@@ -1,5 +1,21 @@
 # Cấu hình `monitor.toml`
 
+## Khởi tạo hồ sơ cho người dùng mới
+
+Sau khi trình bày [báo cáo mẫu](../assets/example-report-2026-10-05_11.html), hỏi tên đối thủ và URL Facebook/TikTok/YouTube của từng bên; website đối thủ tùy chọn. Hỏi tên công ty người dùng, sản phẩm/dịch vụ, khách hàng mục tiêu và ngành/thị trường (website công ty tùy chọn). Không suy ra những thông tin này từ hồ sơ demo. Sao chép cấu hình gần nhất vào `work/<ten-ho-so>.toml`, rồi thay **toàn bộ** danh sách đối thủ, nguồn và từ khóa cho phạm vi mới; file trong `work/` không được đóng gói/đẩy lên GitHub. Trường hợp URL chưa biết, ghi rõ và chỉ thêm nguồn khi đã xác minh.
+
+Có thể thêm bối cảnh doanh nghiệp vào cấu hình riêng:
+
+```toml
+[company]
+name = "Tên công ty người dùng"
+product = "Sản phẩm hoặc dịch vụ chính"
+target_customers = "Nhóm khách hàng mục tiêu"
+website = "" # tùy chọn
+```
+
+Chạy với `--config work/<ten-ho-so>.toml --db work/<ten-ho-so>/monitor.db --runs work/<ten-ho-so>/runs` để không trộn dữ liệu và lịch sử với hồ sơ mẫu. `monitor.py run` xuất HTML theo CSS của báo cáo mẫu; nội dung tự động vẫn cần kiểm chứng/biên tập nếu muốn kết luận tương đương bản mẫu lịch sử.
+
 ## Đổi ngành
 
 Sửa `agent.industry`, danh sách `keywords`, rồi thay toàn bộ `[[competitors]]`, `[[topics]]` và `[[sources]]`. Chạy:

@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = ROOT / "config" / "monitor.toml"
 DEFAULT_DB = ROOT / "work" / "monitor.db"
 DEFAULT_RUNS = ROOT / "work" / "runs"
+SAMPLE_REPORT = ROOT / "assets" / "example-report-2026-10-05_11.html"
 
 
 def _run_id() -> str:
@@ -31,6 +32,11 @@ def setup(args) -> int:
     Store(args.db).close()
     Path(args.runs).mkdir(parents=True, exist_ok=True)
     print(json.dumps({"status": "READY", "config": str(Path(args.config).resolve()), "database": str(Path(args.db).resolve()), **summarize_config(config)}, ensure_ascii=False, indent=2))
+    return 0
+
+
+def preview(args) -> int:
+    print(json.dumps({"sample_html": str(SAMPLE_REPORT.resolve()), "period": "05–11/10/2026", "note": "Mẫu lịch sử về hình thức; không phải báo cáo mới."}, ensure_ascii=False))
     return 0
 
 
@@ -152,6 +158,9 @@ def run(args) -> int:
                 "run_id": run_id,
                 "produced_at": iso_utc(),
                 "industry": agent["industry"],
+                "timezone": agent.get("timezone", "Asia/Ho_Chi_Minh"),
+                "competitor_names": [row["name"] for row in config.get("competitors") or []],
+                "company": config.get("company") or {},
                 "frequency": agent.get("report_frequency", "manual"),
                 "lookback_hours": lookback,
                 "duplicates": summary["duplicates"],
@@ -195,6 +204,7 @@ def parser() -> argparse.ArgumentParser:
     cli.add_argument("--runs", default=str(DEFAULT_RUNS))
     commands = cli.add_subparsers(dest="command", required=True)
     commands.add_parser("setup").set_defaults(func=setup)
+    commands.add_parser("preview").set_defaults(func=preview)
     commands.add_parser("validate-config").set_defaults(func=validate)
     run_parser = commands.add_parser("run")
     run_parser.add_argument("--run-id")

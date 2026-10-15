@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import html
 import json
 from pathlib import Path
 
 from .util import atomic_write
 from .xlsx_writer import write_xlsx
+from .landing import render_landing_html
 
 
 def _join(values) -> str:
@@ -105,16 +105,7 @@ def build_markdown(payload: dict) -> str:
 
 
 def build_html(markdown_payload: dict) -> str:
-    meta, items, analysis, checks, peas = markdown_payload["meta"], markdown_payload["items"], markdown_payload["analysis"], markdown_payload["source_checks"], markdown_payload["peas"]
-    cards = "".join(f'<div class="card"><span>{html.escape(label)}</span><strong>{value}</strong></div>' for label, value in (("Tin mới", len(items)), ("Trùng đã loại", meta["duplicates"]), ("Nguồn truy cập", f"{peas['P']['source_access_rate_pct']}%"), ("Bằng chứng đủ", f"{peas['P']['evidence_complete_pct']}%")))
-    item_html = "".join(f'''<article><div class="badge">{html.escape(item['kind'])}</div><h3>{html.escape(item['title'])}</h3><p class="meta">{html.escape(item['source_name'])} · {html.escape(item.get('published_at') or 'Không có ngày')}</p><p>{html.escape(item.get('summary') or 'Nguồn không cung cấp mô tả.')}</p><p><b>Đối thủ:</b> {html.escape(_join(item.get('competitors')))} · <b>Chủ đề:</b> {html.escape(_join(item.get('topics')))}</p><p><b>Bằng chứng:</b> {html.escape((item.get('evidence') or {}).get('collection_tier', 'UNKNOWN'))} · {html.escape((item.get('evidence') or {}).get('collection_method', 'không rõ'))}</p><a href="{html.escape(item['canonical_url'], quote=True)}">Mở nguồn gốc</a></article>''' for item in items[:20]) or "<p>Không có tin mới đạt ngưỡng liên quan.</p>"
-    trends = "".join(f"<li><b>{html.escape(row['topic'])}</b>: {row['current']} so với {row['previous']} kỳ trước ({html.escape(row['direction'])}).</li>" for row in analysis["trends"][:10]) or "<li>Chưa đủ dữ liệu so sánh.</li>"
-    source_rows = "".join(f"<tr><td>{html.escape(row['source_name'])}</td><td>{html.escape(row['source_type'])}</td><td class='{row['status'].lower()}'>{html.escape(row['status'])}</td><td>{row['item_count']}</td><td>{html.escape(row['method'] or '—')}</td><td>{html.escape(row['error'] or '—')}</td></tr>" for row in checks)
-    diagnosis_rows = "".join(f"<tr><td>{html.escape(row['source_name'])}</td><td>{html.escape(_access_diagnosis(row)[0])}</td><td>{html.escape(_access_diagnosis(row)[1])}</td></tr>" for row in checks if row["status"] != "HEALTHY")
-    lists = lambda values: "".join(f"<li>{html.escape(value)}</li>" for value in values)
-    return f'''<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bản tin thị trường</title><style>
-body{{font-family:Arial,sans-serif;margin:0;background:#f5f7fb;color:#172033}}main{{max-width:1080px;margin:auto;padding:32px}}h1{{font-size:30px;margin-bottom:8px}}h2{{margin-top:38px;border-bottom:2px solid #dbe4f0;padding-bottom:8px}}.muted,.meta{{color:#667085}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:24px 0}}.card,article{{background:white;border:1px solid #e4e7ec;border-radius:12px;padding:18px}}.card span{{display:block;color:#667085}}.card strong{{font-size:24px}}article{{margin:12px 0}}.badge{{display:inline-block;background:#e8f1fb;color:#1f4e78;padding:4px 8px;border-radius:99px;font-size:12px;font-weight:bold}}a{{color:#0563c1}}table{{width:100%;border-collapse:collapse;background:#fff}}th,td{{padding:10px;border-bottom:1px solid #e4e7ec;text-align:left}}th{{background:#1f4e78;color:white}}.healthy{{color:#067647}}.search_index_only,.limited,.manual_review{{color:#b54708}}.error{{color:#b42318}}@media(max-width:700px){{main{{padding:18px}}table{{font-size:12px}}}}
-</style></head><body><main><h1>Bản tin thị trường: {html.escape(meta['industry'])}</h1><p class="muted">{html.escape(meta['produced_at'])} · kỳ {meta['lookback_hours']} giờ · run {html.escape(meta['run_id'])}</p><section class="grid">{cards}</section><h2>Tin nổi bật</h2>{item_html}<h2>Xu hướng mới — nhận định từ dữ liệu</h2><p class="muted">{html.escape(analysis['comparison_note'])}</p><ul>{trends}</ul><h2>Cơ hội</h2><ul>{lists(analysis['opportunities'])}</ul><h2>Rủi ro</h2><ul>{lists(analysis['risks'])}</ul><h2>Đề xuất hành động</h2><ul>{lists(analysis['actions'])}</ul><h2>Trạng thái nguồn</h2><table><thead><tr><th>Nguồn</th><th>Loại</th><th>Trạng thái</th><th>Mục</th><th>Phương thức</th><th>Ghi chú</th></tr></thead><tbody>{source_rows}</tbody></table><h2>Nguồn chưa lấy trực tiếp và cách khắc phục</h2><table><thead><tr><th>Nguồn</th><th>Lý do</th><th>Cách khắc phục</th></tr></thead><tbody>{diagnosis_rows}</tbody></table><h2>Đánh giá PEAS</h2><pre>{html.escape(json.dumps(peas, ensure_ascii=False, indent=2))}</pre></main></body></html>'''
+    return render_landing_html(markdown_payload)
 
 
 def write_reports(output_dir: str | Path, payload: dict) -> dict:

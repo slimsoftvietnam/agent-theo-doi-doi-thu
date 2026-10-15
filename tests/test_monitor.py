@@ -9,6 +9,7 @@ from pathlib import Path
 from competitor_monitor.analysis import enrich_item
 from competitor_monitor.collectors import ArticleHTMLParser, SourceResult, _evidence_tier, _tiktok_item, parse_article_html, parse_feed, parse_sitemap
 from competitor_monitor.db import Store
+from competitor_monitor.reporting import build_html
 from competitor_monitor.util import canonical_url, title_dedupe_key
 from competitor_monitor.xlsx_writer import write_xlsx
 
@@ -91,6 +92,29 @@ class MonitorTests(unittest.TestCase):
             with zipfile.ZipFile(target) as archive:
                 self.assertIn("xl/workbook.xml", archive.namelist())
                 self.assertIn("xl/worksheets/_rels/sheet1.xml.rels", archive.namelist())
+
+    def test_landing_report_uses_sample_design_with_current_evidence(self):
+        payload = {
+            "meta": {"industry": "Thử nghiệm", "produced_at": "2026-10-15T08:00:00Z", "lookback_hours": 168,
+                     "competitor_names": ["Đối thủ <A>"], "timezone": "Asia/Ho_Chi_Minh",
+                     "company": {"name": "Công ty B", "target_customers": "SME"}},
+            "items": [{"title": "Ra mắt giải pháp mới", "summary": "Thông báo mới", "canonical_url": "https://example.com/post",
+                       "published_at": "2026-10-14T03:00:00Z", "source_type": "youtube", "source_name": "Kênh A",
+                       "competitors": ["Đối thủ <A>"], "topics": ["AI"],
+                       "evidence": {"collection_tier": "DIRECT", "collection_method": "youtube_rss"}}],
+            "analysis": {"topic_activity": [{"name": "AI", "count": 1}]},
+            "source_checks": [{"source_name": "Facebook", "status": "SEARCH_INDEX_ONLY"}],
+        }
+        page = build_html(payload)
+        self.assertIn('family=K2D', page)
+        self.assertIn('Báo cáo phân tích đối thủ', page)
+        self.assertIn('https://example.com/post', page)
+        self.assertIn('class="topic-no" href="https://example.com/post"', page)
+        self.assertIn('youtube_rss', page)
+        self.assertIn('Đối thủ &lt;A&gt;', page)
+        self.assertNotIn('Base.vn', page)
+        self.assertIn('1 chủ đề nổi bật', page)
+        self.assertEqual(page.count('class="idea"'), 5)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Báo cáo phân tích đối thủ | 05–11/10/2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=K2D:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#16263b;--muted:#607085;--line:#dfE6ed;--paper:#f7f9fc;--white:#fff;--navy:#10223b;--blue:#375de0;--mint:#45d7bf;--green:#087a71}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 "K2D","Segoe UI",Arial,sans-serif}
+    a{color:#3159cc;text-decoration:none}
+    a:hover{text-decoration:underline}
+    a:focus-visible{outline:3px solid #48d6bc;outline-offset:3px;border-radius:3px}
+    .shell{width:min(100% - 40px,1050px);margin:auto}
+    .topline{height:7px;background:linear-gradient(90deg,#1b5aa4,#37b9af,#a0e9cf)}
+    .mast{padding:25px 0;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brandmark{display:flex;align-items:center;gap:10px;color:#21364f;font-size:12px;font-weight:850;letter-spacing:.16em;text-transform:uppercase}
+    .mark{width:30px;height:30px;border:7px solid #3159cc;border-right-color:#78d9c5;border-radius:50%;transform:rotate(-30deg)}
+    .edition{color:var(--muted);font-size:13px}
+    .hero{position:relative;isolation:isolate;overflow:hidden;min-height:400px;padding:62px 7%;border-radius:26px;background:linear-gradient(118deg,#11243e 0%,#173b60 58%,#1d6872 100%);box-shadow:0 22px 48px #0d274a25;color:white}
+    .hero:before,.hero:after{content:"";position:absolute;border-radius:50%;z-index:-1}
+    .hero:before{width:520px;height:520px;right:-180px;top:-220px;border:1px solid #ffffff22;box-shadow:0 0 0 80px #ffffff07,0 0 0 160px #ffffff06}
+    .hero:after{width:310px;height:310px;right:60px;bottom:-260px;background:radial-gradient(circle,#47e4cb77,transparent 70%);filter:blur(10px)}
+    .hero .kicker{display:inline-flex;gap:9px;align-items:center;color:#a8f1e3;font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:800}
+    .dot{width:7px;height:7px;border-radius:50%;background:#77e3cf;box-shadow:0 0 0 5px #6ce2cc26}
+    h1{font-size:clamp(43px,6.5vw,76px);line-height:1.04;letter-spacing:-.055em;max-width:730px;margin:23px 0 20px;font-weight:780}
+    .hero .lede{font-size:18px;line-height:1.6;max-width:660px;color:#d9e8f3;margin:0}
+    .hero-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+    .hero-meta span{border:1px solid #ffffff50;background:#ffffff12;border-radius:999px;padding:7px 13px;font-size:12px;font-weight:700;letter-spacing:.01em}
+    .jump{display:flex;gap:8px;flex-wrap:wrap;padding:20px 0 13px}
+    .jump a{padding:8px 13px;border:1px solid #e2e8f0;border-radius:100px;background:white;color:#42556b;font-size:13px;font-weight:700;transition:transform .2s,box-shadow .2s}
+    .jump a:hover{transform:translateY(-2px);box-shadow:0 7px 18px #12325517;text-decoration:none}
+    section{scroll-margin-top:22px}
+    .summary{margin:20px 0 70px;padding:35px 40px;border:1px solid #cfe4e3;border-radius:20px;background:linear-gradient(110deg,#e8f7f3,#f3f9ff 72%);box-shadow:0 10px 25px #12325508}
+    .summary .eyebrow{color:#087c74}
+    .summary h2{font-size:26px;letter-spacing:-.035em;margin:7px 0 12px}
+    .summary p{font-size:19px;line-height:1.58;max-width:870px;margin:0;color:#294054}
+    .report-section{padding:0 0 61px;margin-bottom:58px;border-bottom:1px solid #dbe4eb}
+    .section-header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:27px}
+    .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:850;color:#5476a1}
+    .section-header h2{margin:7px 0 0;font-size:clamp(29px,4vw,42px);line-height:1.16;letter-spacing:-.045em}
+    .section-index{font:700 48px/1 "K2D",sans-serif;color:#d8e3f0}
+    .topic-list{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 8px 24px #17324c09}
+    .topic{display:grid;grid-template-columns:68px minmax(0,1fr);gap:19px;align-items:start;padding:25px 28px;border-bottom:1px solid var(--line)}
+    .topic:last-child{border-bottom:0}
+    .topic-no{display:inline-block;font:700 32px/1 "K2D",sans-serif;color:#5778c7;transition:color .2s,transform .2s}
+    .topic-no:hover{color:#143da5;transform:translateX(3px);text-decoration:none}
+    .topic h3{font-size:19px;line-height:1.3;letter-spacing:-.02em;margin:1px 0 6px}
+    .topic p{margin:0;color:#516075;font-size:15px;max-width:780px}
+    .competitor-list{border-top:1px solid var(--line)}
+    .competitor{display:grid;grid-template-columns:57px 170px minmax(0,1fr) auto;gap:17px;align-items:center;padding:19px 5px;border-bottom:1px solid var(--line)}
+    .initial{display:grid;place-items:center;width:46px;height:46px;border-radius:13px;background:#e7ecff;color:#3355b5;font-size:17px;font-weight:800}
+    .competitor:nth-child(2n) .initial{background:#e0f5f0;color:#0b8174}
+    .competitor h3{font-size:17px;margin:0;letter-spacing:-.02em}
+    .competitor p{margin:0;color:#536377;font-size:14px}
+    .state{font-size:11px;font-weight:800;color:#875d16;background:#fff0d8;border-radius:99px;padding:5px 8px;white-space:nowrap}
+    .insight{padding:24px 28px;border-radius:16px;background:#f0f4fd;border-left:4px solid #5574dc;margin-bottom:12px}
+    .insight:last-child{margin-bottom:0}
+    .insight h3{margin:0 0 5px;font-size:19px;letter-spacing:-.025em}
+    .insight p{margin:0;color:#536377;font-size:15px}
+    .dark-panel{background:#132842;color:white;border-radius:22px;padding:28px 36px;box-shadow:0 16px 34px #102d4b20}
+    .idea{display:grid;grid-template-columns:60px 1fr;gap:18px;padding:18px 0;border-bottom:1px solid #ffffff24}
+    .idea:last-child{border-bottom:0}
+    .idea .number{font:700 28px/1 "K2D",sans-serif;color:#78decf}
+    .idea h3{font-size:18px;margin:0 0 4px;line-height:1.35}
+    .idea p{margin:0;color:#c0d2df;font-size:14px}
+    .sources{padding:0 0 45px}
+    .sources .section-header{margin-bottom:12px}
+    .source-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+    .source-list li{display:grid;grid-template-columns:54px 105px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;align-items:start}
+    .source-list .id{font-weight:850;color:#5571a8}
+    .source-list .platform{font-weight:750;color:#677a8d}
+    .source-list a{font-weight:650}
+    .method{font-size:12px;color:#6c7a8b;margin:18px 0 0;line-height:1.6}
+    .foot{border-top:1px solid #e0e7ee;padding:18px 0 32px;font-size:12px;color:#8290a0}
+    @media(max-width:760px){.shell{width:min(100% - 24px,1050px)}.mast{padding:18px 0}.edition{display:none}.hero{min-height:0;padding:42px 25px;border-radius:20px}.hero .lede{font-size:16px}.hero-meta{margin-top:25px}.summary{padding:26px 24px;margin:18px 0 51px}.summary p{font-size:17px}.report-section{margin-bottom:46px;padding-bottom:46px}.section-index{font-size:39px}.topic{grid-template-columns:40px 1fr;gap:11px;padding:21px 17px}.topic-no{font-size:25px}.competitor{grid-template-columns:45px 1fr auto;gap:10px}.initial{width:40px;height:40px;font-size:15px}.competitor p{grid-column:2/-1}.state{align-self:start}.dark-panel{padding:22px}.source-list li{grid-template-columns:40px 70px 1fr;gap:7px;font-size:12px}}
+    @media print{body{background:white}.hero,.dark-panel{print-color-adjust:exact;-webkit-print-color-adjust:exact;box-shadow:none}.jump{display:none}.report-section{break-inside:avoid}.topic-list,.summary{box-shadow:none}}
+  </style>
+</head>
+<body>
+<div class="topline"></div>
+<main class="shell">
+  <div class="mast"><div class="brandmark"><span class="mark" aria-hidden="true"></span> Market intelligence</div><div class="edition">Bản phân tích tuần · 15.10.2026</div></div>
+  <header class="hero">
+    <div class="kicker"><span class="dot"></span> ERP / CRM · Việt Nam</div>
+    <h1>Báo cáo phân tích đối thủ</h1>
+    <p class="lede">Dấu hiệu từ kênh xã hội của Base.vn, MISA AMIS, 1Office, ECOUNT, FastWork, CloudGO và Odoo trong tuần trước.</p>
+    <div class="hero-meta"><span>05–11 tháng 10, 2026</span><span>7 thương hiệu</span><span>Đọc khoảng 3 phút</span></div>
+  </header>
+  <nav class="jump" aria-label="Đi tới nội dung"><a href="#summary">Tóm tắt</a><a href="#topics">Chủ đề</a><a href="#competitors">Đối thủ</a><a href="#gaps">Góc bỏ trống</a><a href="#ideas">Ý tưởng</a><a href="#sources">Nguồn</a></nav>
+
+  <section class="summary" id="summary">
+    <span class="eyebrow">Tóm tắt nhanh</span>
+    <h2>Bức tranh trong một phút</h2>
+    <p>Tuần qua, Base tiếp tục kể câu chuyện AI trong quản trị; MISA tập trung hướng dẫn thuế, tiền lương và CRM trên di động; 1Office nhấn vào bài toán nhân sự; Odoo đưa ra case vận hành đa kênh. Cơ hội nội dung rõ nhất là <strong>chi phí thực tế, kết quả có số đo và cách chuẩn bị dữ liệu cho AI</strong>.</p>
+  </section>
+
+  <section class="report-section" id="topics">
+    <div class="section-header"><div><span class="eyebrow">Tín hiệu thị trường</span><h2>5 chủ đề nổi bật</h2></div><span class="section-index" aria-hidden="true">01</span></div>
+    <div class="topic-list">
+      <article class="topic"><a class="topic-no" href="https://www.facebook.com/base.vietnam/" aria-label="Mở fanpage Base.vn cho chủ đề 01">01</a><div><h3>AI trong vận hành doanh nghiệp</h3><p>Base tiếp tục chuỗi phản hồi khách hàng sau Enterprise AI Summit trên fanpage ngày 08–09/10.</p></div></article>
+      <article class="topic"><a class="topic-no" href="https://www.youtube.com/watch?v=resMJJA7jr0" aria-label="Mở webinar MISA cho chủ đề 02">02</a><div><h3>Thuế và hóa đơn quý III</h3><p>MISA phát webinar kê khai GTGT ngày 05/10 và <a href="https://www.youtube.com/watch?v=zXJBnFTFROE">hướng dẫn xử lý hóa đơn lập sai</a> ngày 06/10.</p></div></article>
+      <article class="topic"><a class="topic-no" href="https://www.youtube.com/watch?v=5Ogl8mBdssk" aria-label="Mở video MISA cho chủ đề 03">03</a><div><h3>Chốt công–lương bớt thủ công</h3><p>MISA hướng dẫn lập bảng lương; <a href="https://www.facebook.com/1officevn/">1Office</a> duy trì nội dung công–lương và quản trị nhân sự trên fanpage.</p></div></article>
+      <article class="topic"><a class="topic-no" href="https://www.youtube.com/watch?v=C1vLK87KlgU" aria-label="Mở video MISA AMIS CRM cho chủ đề 04">04</a><div><h3>CRM trên điện thoại</h3><p>Chuỗi video MISA AMIS CRM ngày 08/10 giới thiệu tra cứu hàng hóa, tồn kho, giá bán cùng các phân hệ <a href="https://www.youtube.com/@MISAAMISCRM/videos">đơn hàng và khách hàng</a>.</p></div></article>
+      <article class="topic"><a class="topic-no" href="https://www.youtube.com/watch?v=M1NJ_PPjRu4" aria-label="Mở video Odoo cho chủ đề 05">05</a><div><h3>ERP hợp nhất nhiều kênh</h3><p>Case Kingdom Inc của Odoo mô tả việc đưa thương mại điện tử, kho, kế toán và xử lý đơn về cùng một hệ thống.</p></div></article>
+    </div>
+  </section>
+
+  <section class="report-section" id="competitors">
+    <div class="section-header"><div><span class="eyebrow">Bản đồ hoạt động</span><h2>Đối thủ đang làm gì?</h2></div><span class="section-index" aria-hidden="true">02</span></div>
+    <div class="competitor-list">
+      <article class="competitor"><span class="initial">B</span><h3>Base.vn</h3><p>Video phản hồi khách hàng sau AI Summit, tiếp tục định vị AI trong quản trị. <a href="#s01">[01]</a></p></article>
+      <article class="competitor"><span class="initial">M</span><h3>MISA AMIS</h3><p>Webinar thuế/hóa đơn, hướng dẫn bảng lương và chuỗi video ngắn về CRM di động. <a href="#s02">[02]</a> <a href="#s04">[04]</a> <a href="#s06">[06]</a></p></article>
+      <article class="competitor"><span class="initial">1</span><h3>1Office</h3><p>Fanpage nhấn vào công–lương và điều hành nhân sự; kênh YouTube không thấy video thường đăng trong tuần này. <a href="#s05">[05]</a> <a href="#s09">[09]</a></p></article>
+      <article class="competitor"><span class="initial">O</span><h3>Odoo</h3><p>Đăng case Kingdom Inc ngày 10/10; fanpage có bài về chuyển đổi số cho SME Philippines ngày 09/10. <a href="#s08">[08]</a> <a href="#s10">[10]</a></p></article>
+      <article class="competitor"><span class="initial">C</span><h3>CloudGO</h3><p>Chưa xác minh được bài xã hội đúng tuần; website có bài về lộ trình chuyển đổi số cấp xã. <a href="#s11">[11]</a></p><span class="state">Web bổ sung</span></article>
+      <article class="competitor"><span class="initial">F</span><h3>FastWork</h3><p>Chưa xác minh được bài xã hội hoặc bài website gốc đúng tuần.</p><span class="state">Thiếu dữ liệu</span></article>
+      <article class="competitor"><span class="initial">E</span><h3>ECOUNT</h3><p>Website sản phẩm truy cập được nhưng chưa xác minh được bài mới có ngày trong tuần. <a href="#s12">[12]</a></p><span class="state">Thiếu dữ liệu</span></article>
+    </div>
+  </section>
+
+  <section class="report-section" id="gaps">
+    <div class="section-header"><div><span class="eyebrow">Cơ hội khác biệt</span><h2>3 góc nội dung còn bỏ trống</h2></div><span class="section-index" aria-hidden="true">03</span></div>
+    <div class="insight"><h3>01 · Bảng chi phí thật cho SME Việt</h3><p>So 12 tháng dùng CRM/ERP ở quy mô 20, 100 và 500 người: phí phần mềm, chuyển dữ liệu, đào tạo và vận hành.</p></div>
+    <div class="insight"><h3>02 · Một hành trình trước–sau có số đo</h3><p>Case doanh nghiệp Việt theo dõi 90 ngày: thời gian chốt lương, sai lệch tồn kho, tốc độ xử lý đơn — có nguồn và phương pháp đo.</p></div>
+    <div class="insight"><h3>03 · Trước khi gắn AI vào quy trình</h3><p>Checklist dữ liệu sạch, phân quyền và kiểm thử AI Agent xuyên CRM–ERP–kế toán; đi từ thông điệp AI đến bước triển khai.</p></div>
+  </section>
+
+  <section class="report-section" id="ideas">
+    <div class="section-header"><div><span class="eyebrow">Kế hoạch nội dung</span><h2>5 ý tưởng cho tuần tới</h2></div><span class="section-index" aria-hidden="true">04</span></div>
+    <div class="dark-panel">
+      <article class="idea"><span class="number">01</span><div><h3>Từ tồn kho đến báo giá trên điện thoại trong 60 giây</h3><p>Video đi qua một luồng thật, không chỉ liệt kê tính năng.</p></div></article>
+      <article class="idea"><span class="number">02</span><div><h3>Checklist chốt công–lương không lệch dữ liệu</h3><p>Kèm mẫu đối soát và các điểm kiểm tra trước khi phát lương.</p></div></article>
+      <article class="idea"><span class="number">03</span><div><h3>Máy tính tổng chi phí CRM/ERP trong 12 tháng</h3><p>Công khai giả định; không dùng giá đối thủ chưa xác minh.</p></div></article>
+      <article class="idea"><span class="number">04</span><div><h3>Nhật ký 90 ngày triển khai cho một SME Việt</h3><p>Ba KPI trước–sau, có sự đồng ý của khách hàng.</p></div></article>
+      <article class="idea"><span class="number">05</span><div><h3>AI Agent cần dữ liệu gì trước khi tự động hóa?</h3><p>Sơ đồ quyền, nguồn dữ liệu và kịch bản thử nghiệm.</p></div></article>
+    </div>
+  </section>
+
+  <section class="sources" id="sources">
+    <div class="section-header"><div><span class="eyebrow">Minh bạch dữ liệu</span><h2>Nguồn thu thập thông tin</h2></div><span class="section-index" aria-hidden="true">05</span></div>
+    <ol class="source-list">
+      <li id="s01"><span class="id">[01]</span><span class="platform">Facebook</span><a href="https://www.facebook.com/base.vietnam/">Fanpage Base.vn · chuỗi phản hồi AI Summit, 08–09/10</a></li>
+      <li id="s02"><span class="id">[02]</span><span class="platform">YouTube</span><a href="https://www.youtube.com/watch?v=resMJJA7jr0">MISA · quy định kê khai thuế GTGT quý III, 05/10</a></li>
+      <li id="s03"><span class="id">[03]</span><span class="platform">YouTube</span><a href="https://www.youtube.com/watch?v=zXJBnFTFROE">MISA · xử lý hóa đơn lập sai, 06/10</a></li>
+      <li id="s04"><span class="id">[04]</span><span class="platform">YouTube</span><a href="https://www.youtube.com/watch?v=5Ogl8mBdssk">MISA · lưu ý khi lập bảng lương, 07/10</a></li>
+      <li id="s05"><span class="id">[05]</span><span class="platform">Facebook</span><a href="https://www.facebook.com/1officevn/">Fanpage 1Office · bài công–lương và nhân sự</a></li>
+      <li id="s06"><span class="id">[06]</span><span class="platform">YouTube</span><a href="https://www.youtube.com/watch?v=C1vLK87KlgU">MISA AMIS CRM · phân hệ hàng hóa trên app, 08/10</a></li>
+      <li id="s07"><span class="id">[07]</span><span class="platform">YouTube</span><a href="https://www.youtube.com/@MISAAMISCRM/videos">Kênh MISA AMIS CRM · các video đơn hàng và khách hàng</a></li>
+      <li id="s08"><span class="id">[08]</span><span class="platform">YouTube</span><a href="https://www.youtube.com/watch?v=M1NJ_PPjRu4">Odoo · case Kingdom Inc, 10/10</a></li>
+      <li id="s09"><span class="id">[09]</span><span class="platform">YouTube</span><a href="https://www.youtube.com/channel/UCeTIRNqxaTwk0_kcTw6SxmA/videos">Kênh video chính thức 1Office</a></li>
+      <li id="s10"><span class="id">[10]</span><span class="platform">Facebook</span><a href="https://www.facebook.com/odoo/">Fanpage Odoo · bài chuyển đổi số cho SME Philippines, 09/10</a></li>
+      <li id="s11"><span class="id">[11]</span><span class="platform">Website</span><a href="https://cloudgo.vn/lo-trinh-chuyen-doi-so-cap-xa">CloudGO · lộ trình chuyển đổi số cấp xã, 08/10</a></li>
+      <li id="s12"><span class="id">[12]</span><span class="platform">Website</span><a href="https://www.ecount.com/vn/">ECOUNT · website sản phẩm, chưa có bài đúng tuần được xác minh</a></li>
+    </ol>
+    <p class="method">Nguồn Facebook/YouTube được mở trực tiếp ở kênh chính thức trong trình duyệt Codex; video dài được tóm theo tiêu đề và mô tả, không coi là đã xem hết. Không có khóa API phù hợp; RSS YouTube bị giới hạn truy xuất. TikTok chưa xác minh được kênh chính thức và trang báo lỗi; cần URL kênh hoặc quyền API để kiểm tiếp. Chưa xác minh được bài xã hội đúng tuần của FastWork, ECOUNT và CloudGO. Chỉ đọc, không tương tác.</p>
+  </section>
+  <footer class="foot">Báo cáo phân tích đối thủ · Cập nhật 15/10/2026</footer>
+</main>
+</body>
+</html>

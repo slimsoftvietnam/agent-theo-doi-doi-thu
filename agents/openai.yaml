@@ -1,6 +1,6 @@
 interface:
   display_name: "Agent theo dõi đối thủ"
   short_description: "Theo dõi đối thủ và tin tức ngành"
-  default_prompt: "Dùng $competitor-news-monitor để lập báo cáo đối thủ tuần trước, ưu tiên kênh xã hội và ghi rõ nguồn."
+  default_prompt: "Dùng $competitor-news-monitor: cho tôi xem báo cáo mẫu, rồi hỏi thông tin công ty, đối thủ và các kênh cần theo dõi."
 policy:
   allow_implicit_invocation: true
