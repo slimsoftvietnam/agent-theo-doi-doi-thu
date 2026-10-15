@@ -12,6 +12,6 @@ Kiểm tra thủ công ngày 15/10/2026 cho tuần 05–11/10/2026. Danh sách n
 | CloudGO | Chưa xác minh fanpage | Chưa xác minh kênh | Chưa xác minh handle |
 | Odoo | https://www.facebook.com/odoo/ — fanpage xác minh | https://www.youtube.com/@Odoo/videos — liên kết từ fanpage, có video đúng kỳ | Chưa xác minh handle |
 
-TikTok trong trình duyệt tích hợp từng báo lỗi máy chủ khi mở trang tìm kiếm. Không dùng lỗi đó để kết luận mọi profile TikTok đều không truy cập được. Trước khi thử profile trực tiếp, cần xác minh handle từ website/kênh chính thức; nếu không có, ghi “chưa xác minh” và đề xuất người dùng cung cấp URL.
+TikTok trong trình duyệt tích hợp từng báo lỗi máy chủ khi mở trang tìm kiếm. Nếu màn hình có nút **Thử lại**, bấm và kiểm tra lại (tối đa hai lần) trước khi ghi lỗi; không dùng lỗi tìm kiếm để kết luận mọi profile đều không truy cập được. Xác minh handle từ website/kênh chính thức, rồi mở trực tiếp profile và từng video mới. Nếu không xác minh được handle, ghi “chưa xác minh” và đề xuất người dùng cung cấp URL.
 
 API YouTube/Facebook/TikTok không có khóa hoặc quyền phù hợp ở lượt kiểm 15/10/2026; RSS YouTube bị giới hạn truy xuất. Đây là tình trạng của lượt đó, không phải trạng thái cố định. Kiểm lại bằng `python monitor.py doctor` mỗi lần chạy.
