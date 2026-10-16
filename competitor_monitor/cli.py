@@ -37,7 +37,7 @@ def setup(args) -> int:
 
 
 def preview(args) -> int:
-    print(json.dumps({"sample_html": str(SAMPLE_REPORT.resolve()), "period": "05–11/10/2026", "note": "Mẫu lịch sử về hình thức; không phải báo cáo mới."}, ensure_ascii=False))
+    print(json.dumps({"sample_html": str(SAMPLE_REPORT.resolve()), "period": "05–11/10/2026", "note": "Mẫu lịch sử có 5 ảnh chụp nguồn nhúng trong HTML; không phải báo cáo mới."}, ensure_ascii=False))
     return 0
 
 
@@ -57,7 +57,7 @@ def plan_screenshots(args) -> int:
             status = "OUTDATED_MANIFEST"
     print(json.dumps({"status": status,
                       "manifest": str(manifest), "topics": len(plan["screenshots"]),
-                      "note": "Chụp đúng URL nguồn cho từng chủ đề; điền captured_at và method, rồi chạy finalize-report. Nếu manifest cũ, đối chiếu và sửa thay vì ghi đè ảnh đã chụp. Không dùng ảnh minh họa thay ảnh chụp nguồn."}, ensure_ascii=False))
+                      "note": "Agent tự chụp đúng URL nguồn cho từng chủ đề; điền path, captured_at và method, rồi chạy finalize-report. Nếu manifest cũ, đối chiếu và sửa thay vì ghi đè ảnh đã chụp. Không dùng ảnh minh họa thay ảnh chụp nguồn."}, ensure_ascii=False))
     return 0
 
 
