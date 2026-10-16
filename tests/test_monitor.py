@@ -5,6 +5,9 @@ import unittest
 import zipfile
 import struct
 import zlib
+import base64
+import hashlib
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -170,6 +173,15 @@ class MonitorTests(unittest.TestCase):
             (root / "screenshots/topic-02.png").write_bytes((root / "screenshots/topic-01.png").read_bytes())
             with self.assertRaises(ValueError):
                 render_landing_html(payload, screenshot_root=root, require_screenshots=True)
+
+    def test_historical_preview_bundles_five_distinct_source_screenshots(self):
+        page = (ROOT / "assets/example-report-2026-10-05_11.html").read_text(encoding="utf-8")
+        screenshots = re.findall(r'<img src="data:image/jpeg;base64,([^"]+)"', page)
+        self.assertEqual(len(screenshots), 5)
+        decoded = [base64.b64decode(value, validate=True) for value in screenshots]
+        self.assertTrue(all(data.startswith(b"\xff\xd8\xff") for data in decoded))
+        self.assertEqual(len({hashlib.sha256(data).digest() for data in decoded}), 5)
+        self.assertIn("https://www.facebook.com/reel/1906475503665532", page)
 
 
 if __name__ == "__main__":

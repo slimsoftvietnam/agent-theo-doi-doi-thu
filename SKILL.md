@@ -9,7 +9,7 @@ Agent chạy cục bộ bằng Python 3.11+ và SQLite, không cần dịch vụ
 
 ## Lần đầu sau khi cài skill
 
-Ở **lần gọi skill đầu tiên**, chạy `python monitor.py preview` để lấy đường dẫn, mở và đưa người dùng xem [báo cáo mẫu 05–11/10/2026](assets/example-report-2026-10-05_11.html). Đây là ví dụ lịch sử về hình thức, không phải báo cáo cập nhật hay dữ liệu mặc định của người cài. Sau đó hỏi trong một lượt:
+Ở **lần gọi skill đầu tiên**, chạy `python monitor.py preview` để lấy đường dẫn, mở và đưa người dùng xem [báo cáo mẫu 05–11/10/2026](assets/example-report-2026-10-05_11.html). Mẫu này đã có 5 ảnh chụp trực tiếp từ 5 nguồn tương ứng, nhúng trong HTML; đây vẫn là ví dụ lịch sử, không phải báo cáo cập nhật hay dữ liệu mặc định của người cài. Sau đó hỏi trong một lượt:
 
 1. Tên các đối thủ muốn theo dõi; URL fanpage Facebook, kênh TikTok, YouTube của **từng** đối thủ (có thể ghi “chưa biết” để agent hỗ trợ xác minh); URL website/blog là **tùy chọn**.
 2. Thông tin doanh nghiệp người dùng: tên công ty, sản phẩm/dịch vụ chính, khách hàng mục tiêu và thị trường/ngành; website công ty nếu có. Dùng bối cảnh này để chọn chủ đề, góc nội dung và ý tưởng phù hợp, không công bố thông tin nhạy cảm nếu chưa được phép.
