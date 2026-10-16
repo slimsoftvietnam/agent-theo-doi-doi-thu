@@ -142,10 +142,10 @@ def render_landing_html(payload: dict, *, screenshot_root: Path | None = None, r
 
     topic_rows = selected_topics(payload)
     screenshot_rows = (payload.get("topic_screenshots") or {}).get("screenshots") or []
-    if require_screenshots and (len(topic_rows) != 5 or len(screenshot_rows) != 5 or screenshot_root is None):
-        raise ValueError("Báo cáo cuối cần đúng 5 chủ đề và 5 ảnh chụp nguồn tương ứng")
-    if require_screenshots and len({row.get("path") for row in screenshot_rows}) != 5:
-        raise ValueError("Năm chủ đề phải dùng năm ảnh chụp khác nhau")
+    if require_screenshots and (not topic_rows or len(screenshot_rows) != len(topic_rows) or screenshot_root is None):
+        raise ValueError("Báo cáo cuối cần ít nhất một chủ đề có nguồn và đúng một ảnh chụp cho mỗi chủ đề")
+    if require_screenshots and len({row.get("path") for row in screenshot_rows}) != len(topic_rows):
+        raise ValueError("Mỗi chủ đề phải dùng một ảnh chụp khác nhau")
     topic_cards = []
     attached = 0
     screenshot_hashes = set()
@@ -170,8 +170,8 @@ def render_landing_html(payload: dict, *, screenshot_root: Path | None = None, r
             f' · {_h(item.get("source_name"))} · {_h(_method(item))}{" · chỉ mục, chưa đọc bài gốc" if _is_index(item) else ""}</p>'
             f'{media}</div></article>'
         )
-    if require_screenshots and attached != 5:
-        raise ValueError("Không đủ năm ảnh chụp hợp lệ để xuất báo cáo cuối")
+    if require_screenshots and attached != len(topic_rows):
+        raise ValueError("Chưa đủ ảnh chụp hợp lệ cho mọi chủ đề để xuất báo cáo cuối")
     topic_html = "".join(topic_cards) or '<p class="insight">Chưa có chủ đề đủ bằng chứng trong lượt chạy này.</p>'
 
     competitor_html = ""
@@ -226,7 +226,9 @@ def render_landing_html(payload: dict, *, screenshot_root: Path | None = None, r
         method += f' Ý tưởng là gợi ý cho {own_company["name"]} và cần xác minh với khách hàng.'
     font_link = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=K2D:wght@400;500;600;700;800&display=swap" rel="stylesheet">'
     draft = not require_screenshots
-    draft_label = '<span>Bản nháp · cần 5 ảnh chụp nguồn</span>' if draft else '<span>5 ảnh chụp nguồn đã kiểm</span>'
+    draft_label = (f'<span>Bản nháp · cần {len(topic_rows)} ảnh chụp nguồn</span>' if draft and topic_rows
+                   else '<span>Bản nháp · chưa có chủ đề đủ nguồn</span>' if draft
+                   else f'<span>{attached} ảnh chụp nguồn đã kiểm</span>')
     return f'''<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Báo cáo phân tích đối thủ | {_h(period)}</title>{font_link}<style>{STYLE}</style></head><body>
 <div class="topline"></div><main class="shell"><div class="mast"><div class="brandmark"><span class="mark" aria-hidden="true"></span> Market intelligence</div><div class="edition">Bản phân tích · {produced:%d.%m.%Y}</div></div>
 <header class="hero"><div class="kicker"><span class="dot"></span> {_h(meta.get("industry"))}</div><h1>Báo cáo phân tích đối thủ</h1><p class="lede">Theo dõi { _h(intro) } trong kỳ { _h(period) }.</p><div class="hero-meta"><span>{_h(period)}</span><span>{len(companies)} đối thủ</span>{draft_label}<span>Đọc khoảng 3 phút</span></div></header>

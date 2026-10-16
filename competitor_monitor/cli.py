@@ -46,7 +46,7 @@ def plan_screenshots(args) -> int:
     payload = json.loads(run_json.read_text(encoding="utf-8"))
     plan = screenshot_plan(payload)
     manifest = run_json.parent / "screenshots" / "manifest.json"
-    status = "READY" if len(plan["screenshots"]) == 5 else "INCOMPLETE"
+    status = "READY" if plan["screenshots"] else "NO_VERIFIABLE_TOPICS"
     if not manifest.exists():
         atomic_write(manifest, json.dumps(plan, ensure_ascii=False, indent=2) + "\n")
     else:
@@ -69,7 +69,8 @@ def finalize_report(args) -> int:
     final_html = render_landing_html(payload, screenshot_root=run_json.parent, require_screenshots=True)
     target = run_json.with_name(run_json.stem + "-final.html")
     atomic_write(target, final_html)
-    print(json.dumps({"status": "FINAL", "html": str(target), "screenshots": 5}, ensure_ascii=False))
+    print(json.dumps({"status": "FINAL", "primary_report": str(target), "html": str(target),
+                      "screenshots": len(payload["topic_screenshots"]["screenshots"])}, ensure_ascii=False))
     return 0
 
 
@@ -210,7 +211,9 @@ def run(args) -> int:
         output_dir = Path(args.runs) / run_id
         paths = write_reports(output_dir, payload)
         store.finish_run(run_id, "COMPLETED", summary)
-        print(json.dumps({"status": "COMPLETED", "run_id": run_id, "summary": summary, "reports": paths}, ensure_ascii=False, indent=2))
+        print(json.dumps({"status": "COMPLETED", "run_id": run_id, "summary": summary,
+                          "primary_report": paths["html"], "primary_report_status": paths["html_status"],
+                          "reports": paths}, ensure_ascii=False, indent=2))
         return 0
     except Exception as exc:
         try:

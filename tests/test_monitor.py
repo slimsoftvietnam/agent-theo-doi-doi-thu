@@ -130,6 +130,40 @@ class MonitorTests(unittest.TestCase):
                    "analysis": {"topic_activity": [{"name": "AI", "count": 1}]}}
         self.assertEqual(screenshot_plan(payload)["screenshots"], [])
 
+    def test_two_competitors_can_finish_html_with_one_image_per_topic(self):
+        with tempfile.TemporaryDirectory(dir=TEST_TMP) as folder:
+            root = Path(folder)
+            (root / "screenshots").mkdir()
+            payload = {
+                "meta": {"industry": "Thử nghiệm", "produced_at": "2026-10-15T08:00:00Z", "lookback_hours": 168,
+                         "competitor_names": ["Đối thủ A", "Đối thủ B"]},
+                "items": [
+                    {"title": f"Bài {i}", "summary": f"Nội dung {i}", "canonical_url": f"https://example.com/post-{i}",
+                     "published_at": "2026-10-14T03:00:00Z", "source_type": "youtube", "source_name": f"Kênh {i}",
+                     "competitors": [f"Đối thủ {chr(64 + i)}"], "topics": [f"Chủ đề {i}"],
+                     "evidence": {"collection_tier": "DIRECT", "collection_method": "youtube_rss"}}
+                    for i in range(1, 3)
+                ],
+                "analysis": {"topic_activity": [{"name": f"Chủ đề {i}", "count": 1} for i in range(1, 3)]},
+                "source_checks": [],
+            }
+            plan = screenshot_plan(payload)
+            self.assertEqual(len(plan["screenshots"]), 2)
+            for i, row in enumerate(plan["screenshots"], 1):
+                (root / row["path"]).write_bytes(b"\xff\xd8\xff" + bytes([i]) * 40)
+                row["captured_at"] = "2026-10-15T15:00:00+07:00"
+                row["method"] = "CODEX_BROWSER"
+            payload["topic_screenshots"] = plan
+            page = render_landing_html(payload, screenshot_root=root, require_screenshots=True)
+            self.assertIn("2 chủ đề nổi bật", page)
+            self.assertIn("2 ảnh chụp nguồn đã kiểm", page)
+            self.assertEqual(page.count('class="topic-shot"'), 2)
+            self.assertEqual(page.count("data:image/jpeg;base64,"), 2)
+            self.assertNotIn("Bản nháp", page)
+            plan["screenshots"].pop()
+            with self.assertRaises(ValueError):
+                render_landing_html(payload, screenshot_root=root, require_screenshots=True)
+
     def test_final_report_embeds_five_distinct_source_screenshots(self):
         with tempfile.TemporaryDirectory(dir=TEST_TMP) as folder:
             root = Path(folder)

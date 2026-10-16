@@ -130,5 +130,5 @@ def write_reports(output_dir: str | Path, payload: dict) -> dict:
     ])
     json_path = output / f"{base}.json"
     atomic_write(json_path, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
-    return {"markdown": str(md_path.resolve()), "html": str(html_path.resolve()), "html_status": "DRAFT_MISSING_SCREENSHOTS",
+    return {"html": str(html_path.resolve()), "html_status": "DRAFT_MISSING_SCREENSHOTS", "markdown": str(md_path.resolve()),
             "xlsx": str(xlsx_path.resolve()), "json": str(json_path.resolve())}
