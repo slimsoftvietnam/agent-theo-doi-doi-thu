@@ -12,8 +12,9 @@ from .analysis import build_analysis, enrich_item, peas_evaluation
 from .collectors import SourceResult, collect_source
 from .config import ConfigError, load_config, summarize_config
 from .db import Store
+from .landing import render_landing_html, screenshot_plan
 from .reporting import write_reports
-from .util import iso_utc
+from .util import atomic_write, iso_utc
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -37,6 +38,38 @@ def setup(args) -> int:
 
 def preview(args) -> int:
     print(json.dumps({"sample_html": str(SAMPLE_REPORT.resolve()), "period": "05–11/10/2026", "note": "Mẫu lịch sử về hình thức; không phải báo cáo mới."}, ensure_ascii=False))
+    return 0
+
+
+def plan_screenshots(args) -> int:
+    run_json = Path(args.run_json).resolve()
+    payload = json.loads(run_json.read_text(encoding="utf-8"))
+    plan = screenshot_plan(payload)
+    manifest = run_json.parent / "screenshots" / "manifest.json"
+    status = "READY" if len(plan["screenshots"]) == 5 else "INCOMPLETE"
+    if not manifest.exists():
+        atomic_write(manifest, json.dumps(plan, ensure_ascii=False, indent=2) + "\n")
+    else:
+        existing = json.loads(manifest.read_text(encoding="utf-8"))
+        expected = [(row["topic"], row["source_url"]) for row in plan["screenshots"]]
+        actual = [(row.get("topic"), row.get("source_url")) for row in existing.get("screenshots", [])]
+        if actual != expected:
+            status = "OUTDATED_MANIFEST"
+    print(json.dumps({"status": status,
+                      "manifest": str(manifest), "topics": len(plan["screenshots"]),
+                      "note": "Chụp đúng URL nguồn cho từng chủ đề; điền captured_at và method, rồi chạy finalize-report. Nếu manifest cũ, đối chiếu và sửa thay vì ghi đè ảnh đã chụp. Không dùng ảnh minh họa thay ảnh chụp nguồn."}, ensure_ascii=False))
+    return 0
+
+
+def finalize_report(args) -> int:
+    run_json = Path(args.run_json).resolve()
+    payload = json.loads(run_json.read_text(encoding="utf-8"))
+    manifest = Path(args.manifest).resolve() if args.manifest else run_json.parent / "screenshots" / "manifest.json"
+    payload["topic_screenshots"] = json.loads(manifest.read_text(encoding="utf-8"))
+    final_html = render_landing_html(payload, screenshot_root=run_json.parent, require_screenshots=True)
+    target = run_json.with_name(run_json.stem + "-final.html")
+    atomic_write(target, final_html)
+    print(json.dumps({"status": "FINAL", "html": str(target), "screenshots": 5}, ensure_ascii=False))
     return 0
 
 
@@ -205,6 +238,13 @@ def parser() -> argparse.ArgumentParser:
     commands = cli.add_subparsers(dest="command", required=True)
     commands.add_parser("setup").set_defaults(func=setup)
     commands.add_parser("preview").set_defaults(func=preview)
+    screenshots_parser = commands.add_parser("screenshot-plan")
+    screenshots_parser.add_argument("run_json")
+    screenshots_parser.set_defaults(func=plan_screenshots)
+    final_parser = commands.add_parser("finalize-report")
+    final_parser.add_argument("run_json")
+    final_parser.add_argument("--manifest")
+    final_parser.set_defaults(func=finalize_report)
     commands.add_parser("validate-config").set_defaults(func=validate)
     run_parser = commands.add_parser("run")
     run_parser.add_argument("--run-id")

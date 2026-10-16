@@ -24,11 +24,7 @@ Chỉ sau khi có câu trả lời mới lập cấu hình riêng cho người d
 python .\monitor.py --config .\config\erp-crm-vn.toml --db .\work\erp-crm-vn\monitor-market.db --runs .\work\erp-crm-vn\runs run
 ```
 
-Lấy đường dẫn JSON của lượt chạy rồi tạo HTML kiểm duyệt bằng:
-
-```powershell
-python .\market_profile_report.py <duong-dan-json-cua-luot-chay> <thu-muc-dau-ra>
-```
+Lấy đường dẫn JSON của lượt chạy để tạo kế hoạch 5 ảnh và bản HTML cuối bằng `screenshot-plan` rồi `finalize-report` như [quy trình bên dưới](#quy-trình). `market_profile_report.py` chỉ dùng khi cần khám phá dữ liệu, không phải đường xuất bản báo cáo cuối.
 
 Hồ sơ này ưu tiên Facebook, TikTok và YouTube trong thứ tự xem xét và trình bày; website/tin ngành chỉ đối chiếu, bổ sung khi kênh xã hội không đủ bằng chứng. Ưu tiên kênh không thay đổi mức tin cậy: tín hiệu chỉ mục luôn tách khỏi bài gốc đã xác minh, không dùng để tính tương tác hoặc khẳng định đã quét nền tảng. Bản Excel chuẩn được `monitor.py` xuất tự động. Khi cần bản HTML biên tập ngắn, đọc [quy trình social-first và chuẩn báo cáo](references/social-first-report.md) trước khi kết luận hay xuất bản. `market_profile_report.py` là báo cáo khám phá dữ liệu, **không phải** bản tin xã hội đã kiểm chứng.
 
@@ -37,7 +33,7 @@ Hồ sơ này ưu tiên Facebook, TikTok và YouTube trong thứ tự xem xét v
 1. Nếu chưa khởi tạo, chạy `setup.cmd` hoặc `python monitor.py setup`.
 2. Kiểm tra cấu hình bằng `python monitor.py validate-config` và xem các quyền API đang có bằng `python monitor.py doctor`. Lệnh doctor chỉ báo có/không, không in secret. Khi đổi ngành, đối thủ hoặc nguồn, đọc [hướng dẫn cấu hình](references/configuration.md).
 3. Chạy thủ công bằng `run.cmd` hoặc `python monitor.py run`.
-4. Đọc đường dẫn kết quả từ JSON in ra cuối lệnh. Báo cáo mỗi lượt gồm Markdown, HTML landing page theo hệ thiết kế của mẫu và Excel; bảng trạng thái nguồn có lý do và cách khắc phục khi chưa lấy trực tiếp. Mở file HTML để người dùng xem. Không sửa lịch sử của lượt cũ. Báo cáo tự động chỉ trình bày bằng chứng và gợi ý sơ bộ; nếu cần bản tin điều hành như **nội dung** của mẫu, kiểm chứng bài gốc và biên tập riêng theo [chuẩn báo cáo](references/social-first-report.md), giữ cùng hệ thiết kế.
+4. Đọc đường dẫn kết quả từ JSON in ra cuối lệnh. Báo cáo mỗi lượt gồm Markdown, HTML **bản nháp** theo thiết kế mẫu và Excel; bảng trạng thái nguồn có lý do/cách khắc phục. Để có HTML cuối, dùng `python monitor.py screenshot-plan <run.json>`, chụp nguồn tương ứng cho từng chủ đề, điền manifest rồi `python monitor.py finalize-report <run.json>`. Lệnh cuối chỉ xuất file khi đủ 5 ảnh hợp lệ, khác nhau và khớp URL; ảnh được nhúng vào HTML nên mở ngoại tuyến không mất. Đọc [quy trình ảnh chụp](references/social-first-report.md) trước khi bàn giao. Không sửa lịch sử của lượt cũ.
 5. Nếu người dùng muốn tự động hóa Windows, dùng `scripts/install-schedule.ps1 -Install` sau khi họ xác nhận lịch. Không tự ý tạo lịch hệ thống.
 
 ## Nguyên tắc bắt buộc
@@ -55,7 +51,7 @@ Hồ sơ này ưu tiên Facebook, TikTok và YouTube trong thứ tự xem xét v
 - Dùng URL chuẩn hóa và khóa nội dung trong SQLite để tránh lặp giữa các lượt chạy. Không xóa lịch sử khi thay cấu hình.
 - Ở mọi tầng chỉ xem và ghi chép: không thích, bình luận, theo dõi, nhắn tin hay đăng bài. Không dùng phiên đăng nhập cá nhân nếu người dùng chỉ cho phép tài khoản phụ.
 - Mỗi nhận định cần nguồn gốc trực tiếp khi có thể, ngày đăng, cách thu thập và mức bằng chứng. Nếu nền tảng chặn, kênh chưa xác minh hoặc không có bài đúng kỳ, nêu lý do và cách khắc phục; không biến “không lấy được” thành “không có hoạt động”.
-- Bản tin HTML mặc định: tiêu đề “Báo cáo phân tích đối thủ”, font K2D, bố cục landing page một cột, tóm tắt ngắn trước 5 chủ đề, tiếp theo là hoạt động đối thủ, 3 góc nội dung bỏ trống, 5 ý tưởng tuần tới và nguồn ở cuối. Số thứ tự chủ đề liên kết thẳng tới bài/video gốc, không nhảy tới phụ lục. Ít chú thích, đọc khoảng 3 phút. Các con số 5/3/5 là mặc định cho bản tin này, không ép nếu người dùng yêu cầu dạng khác.
+- Bản tin HTML cuối mặc định: tiêu đề “Báo cáo phân tích đối thủ”, font K2D, bố cục landing page một cột, tóm tắt ngắn trước **5 chủ đề với 5 ảnh chụp nguồn** (mỗi chủ đề đúng một ảnh), tiếp theo là hoạt động đối thủ, 3 góc nội dung bỏ trống, 5 ý tưởng tuần tới và nguồn ở cuối. Số thứ tự chủ đề liên kết thẳng tới bài/video gốc. Không dùng thumbnail, ảnh minh họa hay ảnh của bài khác để thay ảnh chụp màn hình. Nếu không đủ 5 chủ đề/ảnh thật, chỉ đưa bản nháp và báo rõ phần thiếu; không gọi là báo cáo cuối.
 - Nếu người dùng cần Excel/Markdown, xuất cùng dữ liệu đã kiểm chứng với URL nguồn. Chỉ gửi email hoặc cài lịch khi người dùng yêu cầu rõ; xác nhận địa chỉ/lịch cho tác vụ đó, không suy ra từ lần chạy trước.
 
 ## PEAS

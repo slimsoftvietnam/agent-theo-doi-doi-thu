@@ -3,12 +3,15 @@ from __future__ import annotations
 import tempfile
 import unittest
 import zipfile
+import struct
+import zlib
 from datetime import datetime, timezone
 from pathlib import Path
 
 from competitor_monitor.analysis import enrich_item
 from competitor_monitor.collectors import ArticleHTMLParser, SourceResult, _evidence_tier, _tiktok_item, parse_article_html, parse_feed, parse_sitemap
 from competitor_monitor.db import Store
+from competitor_monitor.landing import render_landing_html, screenshot_plan
 from competitor_monitor.reporting import build_html
 from competitor_monitor.util import canonical_url, title_dedupe_key
 from competitor_monitor.xlsx_writer import write_xlsx
@@ -115,6 +118,58 @@ class MonitorTests(unittest.TestCase):
         self.assertNotIn('Base.vn', page)
         self.assertIn('1 chủ đề nổi bật', page)
         self.assertEqual(page.count('class="idea"'), 5)
+        with self.assertRaises(ValueError):
+            render_landing_html(payload, screenshot_root=TEST_TMP, require_screenshots=True)
+
+    def test_screenshot_plan_skips_search_intermediates(self):
+        payload = {"items": [{"canonical_url": "https://news.google.com/rss/articles/abc", "topics": ["AI"],
+                              "source_type": "youtube", "evidence": {"collection_tier": "SEARCH_INDEX_ONLY"}}],
+                   "analysis": {"topic_activity": [{"name": "AI", "count": 1}]}}
+        self.assertEqual(screenshot_plan(payload)["screenshots"], [])
+
+    def test_final_report_embeds_five_distinct_source_screenshots(self):
+        with tempfile.TemporaryDirectory(dir=TEST_TMP) as folder:
+            root = Path(folder)
+            (root / "screenshots").mkdir()
+            def chunk(kind, value):
+                return struct.pack(">I", len(value)) + kind + value + struct.pack(">I", zlib.crc32(kind + value))
+            def pixel(color):
+                return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 2, 0, 0, 0))
+                        + chunk(b"IDAT", zlib.compress(b"\x00" + bytes([color, 0, 0]))) + chunk(b"IEND", b""))
+            payload = {
+                "meta": {"industry": "Thử nghiệm", "produced_at": "2026-10-15T08:00:00Z", "lookback_hours": 168},
+                "items": [
+                    {"title": f"Bài {i}", "summary": f"Nội dung {i}", "canonical_url": f"https://example.com/post-{i}",
+                     "published_at": f"2026-10-{i+8:02d}T03:00:00Z", "source_type": "youtube", "source_name": "Kênh",
+                     "topics": [f"Chủ đề {i}"], "evidence": {"collection_tier": "DIRECT", "collection_method": "youtube_rss"}}
+                    for i in range(1, 6)
+                ],
+                "analysis": {"topic_activity": [{"name": f"Chủ đề {i}", "count": 1} for i in range(1, 6)]},
+                "source_checks": [],
+            }
+            plan = screenshot_plan(payload)
+            self.assertEqual(len(plan["screenshots"]), 5)
+            self.assertEqual(len({row["source_url"] for row in plan["screenshots"]}), 5)
+            for i, row in enumerate(plan["screenshots"], 1):
+                (root / row["path"]).write_bytes(pixel(i * 35))
+                row["captured_at"] = "2026-10-15T15:00:00+07:00"
+                row["method"] = "CODEX_BROWSER"
+            payload["topic_screenshots"] = plan
+            page = render_landing_html(payload, screenshot_root=root, require_screenshots=True)
+            self.assertEqual(page.count('class="topic-shot"'), 5)
+            self.assertEqual(page.count("data:image/png;base64,"), 5)
+            self.assertNotIn("bản nháp", page.lower())
+            plan["screenshots"][0]["source_url"] = "https://example.com/other"
+            with self.assertRaises(ValueError):
+                render_landing_html(payload, screenshot_root=root, require_screenshots=True)
+            plan["screenshots"][0]["source_url"] = "https://example.com/post-1"
+            plan["screenshots"][0]["path"] = "../outside.png"
+            with self.assertRaises(ValueError):
+                render_landing_html(payload, screenshot_root=root, require_screenshots=True)
+            plan["screenshots"][0]["path"] = "screenshots/topic-01.png"
+            (root / "screenshots/topic-02.png").write_bytes((root / "screenshots/topic-01.png").read_bytes())
+            with self.assertRaises(ValueError):
+                render_landing_html(payload, screenshot_root=root, require_screenshots=True)
 
 
 if __name__ == "__main__":
